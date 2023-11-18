@@ -3,3 +3,6 @@ __pycache__/
 *.pyo
 *.pyd
 venv/
+data/accounts/
+data/analytics/
+!data/transactions_list.csv
