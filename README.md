@@ -1,1 +1,1 @@
-# bluecoins-dashboard
+# bluecoins_dashboard
