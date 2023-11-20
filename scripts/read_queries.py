@@ -20,4 +20,5 @@ def query(query_name):
     query = read_query(query_name)
     db_engine = create_engine(connection_uri)
     df = pd.read_sql(query, db_engine)
+    df.index = range(1, len(df) + 1)
     return df
