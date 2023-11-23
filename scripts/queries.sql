@@ -46,7 +46,7 @@ ORDER BY
 --@name: expenses_per_category
 SELECT
     category,
-    ROUND(ABS(SUM(CASE WHEN type = 'Expense' THEN amount ELSE 0 END))::numeric) as expenses
+    ROUND(ABS(SUM(CASE WHEN type = 'Expense' THEN amount ELSE 0 END))) as expenses
 FROM
     transactions
 GROUP BY
@@ -59,7 +59,7 @@ ORDER BY
 --@name: income_per_category
 SELECT
     category,
-    ROUND(ABS(SUM(CASE WHEN type = 'Income' THEN amount ELSE 0 END))::numeric) as income
+    ROUND(ABS(SUM(CASE WHEN type = 'Income' THEN amount ELSE 0 END))) as income
 FROM
     transactions
 GROUP BY
@@ -72,7 +72,7 @@ ORDER BY
 --@name: monthly_expenses
 SELECT
     TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
-    ABS(ROUND(SUM(amount)::numeric)) AS expenses
+    ABS(ROUND(SUM(amount))) AS expenses
 FROM 
     transactions
 WHERE
@@ -85,12 +85,40 @@ ORDER BY
 --@name: monthly_income
 SELECT
 	TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
-	ROUND(SUM(amount)::numeric) AS income
+	ROUND(SUM(amount)) AS income
 FROM
 	transactions
-WHERE 
-    type = 'Income'
+WHERE
+	type = 'Income'
 GROUP BY
 	DATE_TRUNC('month', date)
 ORDER BY 
 	DATE_TRUNC('month', date);
+
+--@name: weekly_expenses
+SELECT
+    DATE_TRUNC('week', date) + INTERVAL '6 days' AS week,
+    ROUND(ABS(SUM(amount))) AS expenses
+FROM
+    transactions
+WHERE
+    type = 'Expense'
+GROUP BY
+    DATE_TRUNC('week', date)
+ORDER BY
+    DATE_TRUNC('week', date);
+	
+--@name: daily_expenses
+SELECT
+    DATE(date) AS day,
+	ROUND(ABS(SUM(amount))) as expenses
+FROM
+	transactions
+WHERE
+	type = 'Expense'
+GROUP BY
+	day
+ORDER BY
+	day;
+	
+	
