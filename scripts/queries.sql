@@ -121,4 +121,28 @@ GROUP BY
 ORDER BY
 	day;
 	
+--@name: payment_methods
+SELECT
+	account,
+	ROUND(ABS(SUM(amount))) as amount
+FROM
+	transactions
+WHERE
+	type = 'Expense'
+GROUP BY
+	account
+ORDER BY
+	amount ASC;
 	
+--@name: receiving_methods
+SELECT
+	account,
+	ROUND(ABS(SUM(amount))) as amount
+FROM
+	transactions
+WHERE
+	type = 'Income'
+GROUP BY
+	account
+ORDER BY
+	amount ASC;
