@@ -24,6 +24,17 @@ with tab1:
     width=1200, height= 600)
     st.plotly_chart(fig_accounts_over_time)
 
+    st.header("Payment Methods")
+    payment_methods = query("payment_methods")
+    fig_payment_methods = px.bar(payment_methods, x='amount', y='account', title='Payment Methods')
+    st.plotly_chart(fig_payment_methods)
+
+    st.header("Receiving Methods")
+    receiving_methods = query("receiving_methods")
+    fig_receiving_methods = px.bar(receiving_methods, x='amount', y='account', title='Receiving Methods')
+    st.plotly_chart(fig_receiving_methods)
+
+
 with tab2:
     st.header("Expenditure")
     monthly_expenses = query("monthly_expenses")
