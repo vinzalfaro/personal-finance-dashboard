@@ -68,3 +68,29 @@ HAVING
     SUM(CASE WHEN type = 'Income' THEN amount ELSE 0 END) <> 0
 ORDER BY
 	income DESC;
+
+--@name: monthly_expenses
+SELECT
+    TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
+    ABS(ROUND(SUM(amount)::numeric)) AS expenses
+FROM 
+    transactions
+WHERE
+    type = 'Expense'
+GROUP BY
+    DATE_TRUNC('month', date)
+ORDER BY
+    DATE_TRUNC('month', date);
+
+--@name: monthly_income
+SELECT
+	TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
+	ROUND(SUM(amount)::numeric) AS income
+FROM
+	transactions
+WHERE 
+    type = 'Income'
+GROUP BY
+	DATE_TRUNC('month', date)
+ORDER BY 
+	DATE_TRUNC('month', date);
