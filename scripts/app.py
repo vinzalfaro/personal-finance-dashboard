@@ -13,25 +13,31 @@ st.set_page_config(page_title='My Personal Finance App',
                    layout='wide')
 
 st.title('My Personal Finance App')
-
 tab1, tab2, tab3 = st.tabs(['Accounts', 'Expenses', 'Income'])
 
 with tab1:
     st.header("Accounts")
-
     amount_over_time = query("amount_over_time")
     column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
     selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
     fig_accounts_over_time = px.line(amount_over_time , x='date', y=selected_columns, title='Account Balance Over Time', 
     width=1200, height= 600)
-
     st.plotly_chart(fig_accounts_over_time)
 
 with tab2:
-    st.header("Monthly expenditure")
+    st.header("Expenditure")
     monthly_expenses = query("monthly_expenses")
     fig_monthly_expenses = px.bar(monthly_expenses, x='month', y='expenses', title='Monthly Expenses')
     st.plotly_chart(fig_monthly_expenses)
+
+    weekly_expenses = query("weekly_expenses")
+    fig_weekly_expenses = px.bar(weekly_expenses, x='week', y='expenses', title='Weekly Expenses')
+    st.plotly_chart(fig_weekly_expenses)
+
+    daily_expenses = query("daily_expenses")
+    fig_daily_expenses = px.bar(daily_expenses, x='day', y='expenses', title='Daily Expenses')
+    st.plotly_chart(fig_daily_expenses)
+
 
     st.header("Expenses per category")
     expenses_per_category = query("expenses_per_category")
