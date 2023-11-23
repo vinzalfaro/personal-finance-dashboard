@@ -28,20 +28,22 @@ with tab1:
     st.plotly_chart(fig_accounts_over_time)
 
 with tab2:
-    st.header("Expenses")
+    st.header("Monthly expenditure")
+    monthly_expenses = query("monthly_expenses")
+    fig_monthly_expenses = px.bar(monthly_expenses, x='month', y='expenses', title='Monthly Expenses')
+    st.plotly_chart(fig_monthly_expenses)
 
+    st.header("Expenses per category")
     expenses_per_category = query("expenses_per_category")
+    fig_expenses_by_category = px.pie(expenses_per_category, values='expenses', names='category', width=700, height=700, hole=0.4,)
+    fig_expenses_by_category.update_traces(textposition='inside', textinfo='percent+label')
+    st.plotly_chart(fig_expenses_by_category)
+
+    st.header("Top expenses")
+    st.dataframe(expenses_per_category, height=550, use_container_width= True)
     
-    fig_expenses = px.pie(expenses_per_category, values='expenses', names='category', width=700, height=700, hole=0.4,)
-    fig_expenses.update_traces(textposition='inside', textinfo='percent+label')
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.plotly_chart(fig_expenses)
-
-    with col2:
-        st.dataframe(expenses_per_category, height=550, use_container_width= True)
+    
 
 with tab3:
     st.header("Income")
