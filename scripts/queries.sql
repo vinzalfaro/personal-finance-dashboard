@@ -1,47 +1,80 @@
 --@name: transactions
 SELECT * FROM transactions;
 
---@name: net_worth_over_time
+--@name: monthly_amount_over_time
 SELECT
-    date,
-    SUM(amount) OVER (ORDER BY date) AS net_worth
-FROM 
-    transactions;
-
---@name: accounts_over_time
-SELECT
-    date,
-    SUM(CASE WHEN Account = 'Wallet' THEN amount ELSE 0 END) OVER (ORDER BY date) AS wallet,
-    SUM(CASE WHEN Account = 'Union Bank' THEN amount ELSE 0 END) OVER (ORDER BY date) AS unionbank,
-    SUM(CASE WHEN Account = 'Seabank' THEN amount ELSE 0 END) OVER (ORDER BY date) AS seabank,
-    SUM(CASE WHEN Account = 'GCash' THEN amount ELSE 0 END) OVER (ORDER BY date) AS gcash,
-    SUM(CASE WHEN Account = 'Maya' THEN amount ELSE 0 END) OVER (ORDER BY date) AS maya,
-    SUM(CASE WHEN Account = 'GrabPay' THEN amount ELSE 0 END) OVER (ORDER BY date) AS grabpay,
-    SUM(CASE WHEN Account = 'ShopeePay' THEN amount ELSE 0 END) OVER (ORDER BY date) AS shopeepay,
-    SUM(CASE WHEN Account = 'Binance' THEN amount ELSE 0 END) OVER (ORDER BY date) AS binance,
-    SUM(CASE WHEN Account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY date) AS ronin
+    month,
+    SUM(amount) OVER (ORDER BY month) AS net_worth,
+    SUM(CASE WHEN account = 'Wallet' THEN amount ELSE 0 END) OVER (ORDER BY month) AS wallet,
+    SUM(CASE WHEN account = 'Union Bank' THEN amount ELSE 0 END) OVER (ORDER BY month) AS unionbank,
+    SUM(CASE WHEN account = 'Seabank' THEN amount ELSE 0 END) OVER (ORDER BY month) AS seabank,
+    SUM(CASE WHEN account = 'GCash' THEN amount ELSE 0 END) OVER (ORDER BY month) AS gcash,
+    SUM(CASE WHEN account = 'Maya' THEN amount ELSE 0 END) OVER (ORDER BY month) AS maya,
+    SUM(CASE WHEN account = 'GrabPay' THEN amount ELSE 0 END) OVER (ORDER BY month) AS grabpay,
+    SUM(CASE WHEN account = 'ShopeePay' THEN amount ELSE 0 END) OVER (ORDER BY month) AS shopeepay,
+    SUM(CASE WHEN account = 'Binance' THEN amount ELSE 0 END) OVER (ORDER BY month) AS binance,
+    SUM(CASE WHEN account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY month) AS ronin
 FROM
-    transactions
-ORDER BY
-    date;
+    (SELECT
+		TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
+		account,
+		SUM(ROUND(amount)) AS amount
+	FROM
+		transactions
+	GROUP BY 
+		month, account
+	ORDER BY
+		month);
 
---@name: amount_over_time
+--@name: weekly_amount_over_time
 SELECT
-    date,
-    SUM(amount) OVER (ORDER BY date) AS net_worth,
-    SUM(CASE WHEN Account = 'Wallet' THEN amount ELSE 0 END) OVER (ORDER BY date) AS wallet,
-    SUM(CASE WHEN Account = 'Union Bank' THEN amount ELSE 0 END) OVER (ORDER BY date) AS unionbank,
-    SUM(CASE WHEN Account = 'Seabank' THEN amount ELSE 0 END) OVER (ORDER BY date) AS seabank,
-    SUM(CASE WHEN Account = 'GCash' THEN amount ELSE 0 END) OVER (ORDER BY date) AS gcash,
-    SUM(CASE WHEN Account = 'Maya' THEN amount ELSE 0 END) OVER (ORDER BY date) AS maya,
-    SUM(CASE WHEN Account = 'GrabPay' THEN amount ELSE 0 END) OVER (ORDER BY date) AS grabpay,
-    SUM(CASE WHEN Account = 'ShopeePay' THEN amount ELSE 0 END) OVER (ORDER BY date) AS shopeepay,
-    SUM(CASE WHEN Account = 'Binance' THEN amount ELSE 0 END) OVER (ORDER BY date) AS binance,
-    SUM(CASE WHEN Account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY date) AS ronin
+    week,
+    SUM(amount) OVER (ORDER BY week) AS net_worth,
+    SUM(CASE WHEN account = 'Wallet' THEN amount ELSE 0 END) OVER (ORDER BY week) AS wallet,
+    SUM(CASE WHEN account = 'Union Bank' THEN amount ELSE 0 END) OVER (ORDER BY week) AS unionbank,
+    SUM(CASE WHEN account = 'Seabank' THEN amount ELSE 0 END) OVER (ORDER BY week) AS seabank,
+    SUM(CASE WHEN account = 'GCash' THEN amount ELSE 0 END) OVER (ORDER BY week) AS gcash,
+    SUM(CASE WHEN account = 'Maya' THEN amount ELSE 0 END) OVER (ORDER BY week) AS maya,
+    SUM(CASE WHEN account = 'GrabPay' THEN amount ELSE 0 END) OVER (ORDER BY week) AS grabpay,
+    SUM(CASE WHEN account = 'ShopeePay' THEN amount ELSE 0 END) OVER (ORDER BY week) AS shopeepay,
+    SUM(CASE WHEN account = 'Binance' THEN amount ELSE 0 END) OVER (ORDER BY week) AS binance,
+    SUM(CASE WHEN account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY week) AS ronin
 FROM
-    transactions
-ORDER BY
-    date;
+    (SELECT
+		DATE_TRUNC('week', date) + INTERVAL '6 days' AS week,
+		account,
+		SUM(ROUND(amount)) AS amount
+	FROM
+		transactions
+	GROUP BY 
+		week, account
+	ORDER BY
+		week);
+
+--@name: daily_amount_over_time
+SELECT
+    day,
+    SUM(amount) OVER (ORDER BY day) AS net_worth,
+    SUM(CASE WHEN account = 'Wallet' THEN amount ELSE 0 END) OVER (ORDER BY day) AS wallet,
+    SUM(CASE WHEN account = 'Union Bank' THEN amount ELSE 0 END) OVER (ORDER BY day) AS unionbank,
+    SUM(CASE WHEN account = 'Seabank' THEN amount ELSE 0 END) OVER (ORDER BY day) AS seabank,
+    SUM(CASE WHEN account = 'GCash' THEN amount ELSE 0 END) OVER (ORDER BY day) AS gcash,
+    SUM(CASE WHEN account = 'Maya' THEN amount ELSE 0 END) OVER (ORDER BY day) AS maya,
+    SUM(CASE WHEN account = 'GrabPay' THEN amount ELSE 0 END) OVER (ORDER BY day) AS grabpay,
+    SUM(CASE WHEN account = 'ShopeePay' THEN amount ELSE 0 END) OVER (ORDER BY day) AS shopeepay,
+    SUM(CASE WHEN account = 'Binance' THEN amount ELSE 0 END) OVER (ORDER BY day) AS binance,
+    SUM(CASE WHEN account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY day) AS ronin
+FROM
+    (SELECT
+		DATE(date) AS day,
+		account,
+		SUM(ROUND(amount)) AS amount
+	FROM
+		transactions
+	GROUP BY 
+		day, account
+	ORDER BY
+		day);
 
 --@name: expenses_per_category
 SELECT
