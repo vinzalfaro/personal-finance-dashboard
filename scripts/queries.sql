@@ -165,7 +165,7 @@ WHERE
 GROUP BY
 	account
 ORDER BY
-	amount ASC;
+	amount DESC;
 	
 --@name: receiving_methods
 SELECT
@@ -178,4 +178,4 @@ WHERE
 GROUP BY
 	account
 ORDER BY
-	amount ASC;
+	amount DESC;

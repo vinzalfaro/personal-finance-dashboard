@@ -1,6 +1,5 @@
 import pandas as pd
 from sqlalchemy import create_engine
-from read_queries import query
 
 def extract():
     raw_transactions = pd.read_csv('../data/transactions_list.csv')
