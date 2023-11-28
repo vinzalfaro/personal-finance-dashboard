@@ -16,7 +16,7 @@ SELECT
     SUM(CASE WHEN account = 'Ronin' THEN amount ELSE 0 END) OVER (ORDER BY month) AS ronin
 FROM
     (SELECT
-		TO_CHAR(DATE_TRUNC('month', date), 'FMMonth YYYY') AS month,
+		DATE_TRUNC('month', date) AS month,
 		account,
 		SUM(ROUND(amount)) AS amount
 	FROM
