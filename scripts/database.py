@@ -1,8 +1,8 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-def extract():
-    raw_transactions = pd.read_csv('../data/transactions_list.csv')
+def extract(file):
+    raw_transactions = pd.read_csv(file)
     return raw_transactions
 
 def transform(df):
@@ -21,8 +21,8 @@ def load(df, db_table, connection_uri):
         if_exists = "replace",
         index = False)
 
-def etl(connection_uri):
-    raw_transactions = extract()
+def etl(file, connection_uri):
+    raw_transactions = extract(file)
     cleaned_transactions = transform(raw_transactions)
     load(cleaned_transactions, "transactions", connection_uri)
 

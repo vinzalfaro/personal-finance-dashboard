@@ -5,9 +5,6 @@ from read_queries import query
 import streamlit as st
 import plotly.express as px
 
-connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
-etl(connection_uri)
-
 st.set_page_config(page_title='My Personal Finance App',
                    page_icon=':money_with_wings:',
                    layout='wide')
@@ -19,7 +16,10 @@ sidebar_main = st.sidebar.selectbox('Navigation', ['Home','Dashboard', 'Explore'
 view = st.sidebar.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
 
 with tab1:
-    sidebar = 'Home'
+    transactions_list = st.file_uploader("Upload transactions_list.csv here")
+    if transactions_list is not None:
+        connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
+        etl(transactions_list, connection_uri)
 
 with tab2:
     sidebar = 'Dashboard'
