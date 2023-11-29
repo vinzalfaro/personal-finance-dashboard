@@ -1,4 +1,4 @@
-from database import etl, extract
+from database import extract, transform, load
 from read_queries import query
 import streamlit as st
 import plotly.express as px
@@ -8,15 +8,10 @@ st.set_page_config(page_title='My Personal Finance App',
                    layout='wide')
 
 st.title('Personal Finance App')
-tab1, tab2, tab3 = st.tabs(['Home', 'Data', 'Dashboard'])
 
-with st.sidebar:
-    st.header('Filters')
-    column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
-    selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
-    view = st.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
+navigation = st.sidebar.selectbox('Navigation', ['Home','Data', 'Dashboard'])
 
-with tab1:
+if navigation == 'Home':
     with st.container():
         st.markdown("""
                     Hi! Welcome to Personal Finance App. You can find the app's GitHub repository [here](https://github.com/vinzalfaro/bluecoins_dashboard).
@@ -25,23 +20,32 @@ with tab1:
                     Please upload your transactions csv file below and go to the "Dashboard" tab to see your analytics dashboard. 
                     """ )
 
-        transactions_list = st.file_uploader("Upload file here")
-        if st.button('Create Dashboard'):
-            if transactions_list is not None:
-                connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
-                etl(transactions_list, connection_uri)
+if navigation == 'Data':
+    file = st.file_uploader("Upload file here")
+    if file is not None:
+        connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
+        raw_transactions = extract(file)
+        load(raw_transactions, "raw_transactions", connection_uri)
+        cleaned_transactions = transform(raw_transactions)
+        load(cleaned_transactions, "transactions", connection_uri)
 
-with tab2:
-    with st.container():
-        raw_transactions = extract(transactions_list)
-        st.markdown("Raw Transactions Dataframe")
+    with st.expander('See raw transactions data'):
+        raw_transactions = query("raw_transactions")
         st.dataframe(raw_transactions, height=400, use_container_width= True)
-    with st.container():
+    with st.expander('See cleaned transactions data'):
         cleaned_transactions = query("transactions")
-        st.markdown("Cleaned Transactions Dataframe")
         st.dataframe(cleaned_transactions, height=400, use_container_width= True)
+    with st.expander('See accounts data'):
+        accounts = query("daily_amount_over_time")
+        st.dataframe(accounts, height=400, use_container_width= True)
 
-with tab3:
+if navigation == 'Dashboard':
+    with st.sidebar:
+        st.header('Filters')
+        column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
+        selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
+        view = st.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
+
     with st.container():
         if view == 'monthly':   
             monthly_amount_over_time = query("monthly_amount_over_time")
