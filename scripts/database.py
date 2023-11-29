@@ -21,9 +21,4 @@ def load(df, db_table, connection_uri):
         if_exists = "replace",
         index = False)
 
-def etl(file, connection_uri):
-    raw_transactions = extract(file)
-    cleaned_transactions = transform(raw_transactions)
-    load(cleaned_transactions, "transactions", connection_uri)
-
 
