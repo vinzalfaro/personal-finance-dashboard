@@ -8,10 +8,15 @@ st.set_page_config(page_title='My Personal Finance App',
                    layout='wide')
 
 st.title('Personal Finance App')
+tab1, tab2, tab3 = st.tabs(['Home', 'Data', 'Dashboard'])
 
-navigation = st.sidebar.selectbox('Navigation', ['Home','Data', 'Dashboard'])
+with st.sidebar:
+    st.header('Filters')
+    column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
+    selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
+    view = st.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
 
-if navigation == 'Home':
+with tab1:
     with st.container():
         st.markdown("""
                     Hi! Welcome to Personal Finance App. You can find the app's GitHub repository [here](https://github.com/vinzalfaro/bluecoins_dashboard).
@@ -20,7 +25,7 @@ if navigation == 'Home':
                     Please upload your transactions csv file below and go to the "Dashboard" tab to see your analytics dashboard. 
                     """ )
 
-if navigation == 'Data':
+with tab2:
     file = st.file_uploader("Upload file here")
     if file is not None:
         connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
@@ -39,13 +44,7 @@ if navigation == 'Data':
         accounts = query("daily_amount_over_time")
         st.dataframe(accounts, height=400, use_container_width= True)
 
-if navigation == 'Dashboard':
-    with st.sidebar:
-        st.header('Filters')
-        column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
-        selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
-        view = st.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
-
+with tab3:
     with st.container():
         if view == 'monthly':   
             monthly_amount_over_time = query("monthly_amount_over_time")
