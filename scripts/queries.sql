@@ -1,3 +1,6 @@
+--@name: raw_transactions
+SELECT * FROM raw_transactions;
+
 --@name: transactions
 SELECT * FROM transactions;
 
