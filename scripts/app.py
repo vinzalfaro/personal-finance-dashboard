@@ -15,19 +15,23 @@ with st.sidebar:
     st.header('Filters')
     column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
     selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
-    view = st.radio("Select view:", ["monthly", "weekly", "daily"], horizontal = True, key = "sidebar")
+    view = st.radio("Select view:", ["monthly", "weekly", "daily"], index=1, horizontal = True, key = "sidebar")
 
 with tab1:
     with st.container():
         st.subheader('Project Overview')
         st.markdown("""
                     The Personal Finance App extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
-                    Bluecoins is an expense tracking app that allows the export of data in CSV format. The Personal Finance App takes this file or 
+                    Bluecoins is an expense tracking app that allows export of data in CSV format. The Personal Finance App takes this file or 
                     any other file with the same CSV format to generate analytics.
                     """ )
+        personal_finance = Image.open('../images/finance.jpg')
+        st.image(personal_finance, caption='Source: LittlePigPower/Shutterstock.com')
+    
+    with st.container():
         st.subheader('Motivation Behind the Project')
         st.markdown("""
-                    I’ve been using the Bluecoins app to track my expenses for over a year now and I want to gain insights about my expenditure. 
+                    I’ve been using the Bluecoins app to track my expenses for over a year now, and using my recorded data, I want to gain insights about my expenditure. 
                     Some of the questions I aim to answer are as follows:
 
                     1. Where am I spending the most?
@@ -39,15 +43,18 @@ with tab1:
                     In addition, I wanted to apply what I’ve learned in programming so far. This covers Python (Pandas, SQLAlchemy, Plotly, Streamlit), 
                     SQL (relational databases, how to write queries), Git workflow, project management and documentation.
                     """ )
+        architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
+        st.image(architecture_diagram, caption='Technologies used')
+            
+    with st.container():
         st.subheader('Get Started')
         st.markdown("""
-                    To use the app, follow these instructions:
+                    To use the app, kindly follow these instructions:
 
                     1. Export transactions data from Bluecoins app. This will create a file called ‘transactions_list.csv’.
-                    2. Go to the ‘Data’ tab and upload the file. The dashboard will be created automatically once it is uploaded. 
-                    You can explore the data by clicking on the expanders below.
+                    2. Go to the ‘Data’ tab and upload the file. The dashboard is created automatically once the file is uploaded. Dataframes containing raw and
+                    derived data are also shown. You can explore the data by clicking on the expanders.
                     3. Go to the ‘Dashboard’ tab and explore the charts. Use the filters on the left sidebar to show specific plots or views.
-
                     """ )
 
 with tab2:
@@ -59,13 +66,13 @@ with tab2:
         cleaned_transactions = transform(raw_transactions)
         load(cleaned_transactions, "transactions", connection_uri)
 
-    with st.expander('See raw transactions data'):
+    with st.expander('Raw Transactions Data'):
         raw_transactions = query("raw_transactions")
         st.dataframe(raw_transactions, height=400, use_container_width= True)
-    with st.expander('See cleaned transactions data'):
+    with st.expander('Cleaned Transactions Data'):
         cleaned_transactions = query("transactions")
         st.dataframe(cleaned_transactions, height=400, use_container_width= True)
-    with st.expander('See accounts data'):
+    with st.expander('Accounts Data'):
         accounts = query("daily_amount_over_time")
         st.dataframe(accounts, height=400, use_container_width= True)
 
@@ -134,6 +141,6 @@ with tab3:
             fig_daily_expenses = px.line(daily_expenses, x='day', y='expenses', title='Daily Expenses')
             st.plotly_chart(fig_daily_expenses, use_container_width= True)
 with tab4:
-    st.header('Architecture Diagram')
+    st.subheader('Architecture Diagram')
     architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
     st.image(architecture_diagram)
