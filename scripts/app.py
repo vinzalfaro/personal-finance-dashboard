@@ -4,19 +4,25 @@ import streamlit as st
 import plotly.express as px
 from PIL import Image
 
+# ----- PAGE SETUP -----
 st.set_page_config(page_title='My Personal Finance App',
                    page_icon=':money_with_wings:',
                    layout='wide')
 
+# ----- TITLE & TABS -----
 st.title('Personal Finance App')
 tab1, tab2, tab3, tab4 = st.tabs(['Home', 'Data', 'Dashboard', 'Documentation'])
 
+# ----- SIDE BAR ----- 
 with st.sidebar:
     st.header('Filters')
+    # Accounts filter
     column_options = ['binance', 'gcash', 'grabpay', 'maya', 'ronin', 'seabank', 'shopeepay', 'unionbank', 'wallet', 'net_worth']
     selected_columns = st.multiselect('Select accounts to display:', column_options, default='net_worth')
+    # Views filter
     view = st.radio("Select view:", ["monthly", "weekly", "daily"], index=1, horizontal = True, key = "sidebar")
 
+# ----- HOME TAB -----
 with tab1:
     with st.container():
         st.subheader('Project Overview')
@@ -57,7 +63,9 @@ with tab1:
                     3. Go to the ‘Dashboard’ tab and explore the charts. Use the filters on the left sidebar to show specific plots or views.
                     """ )
 
+# ----- DATA TAB -----
 with tab2:
+    # File input
     file = st.file_uploader("Upload file here")
     if file is not None:
         connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
@@ -65,7 +73,8 @@ with tab2:
         load(raw_transactions, "raw_transactions", connection_uri)
         cleaned_transactions = transform(raw_transactions)
         load(cleaned_transactions, "transactions", connection_uri)
-
+        
+    # DataFrames
     with st.expander('Raw Transactions Data'):
         raw_transactions = query("raw_transactions")
         st.dataframe(raw_transactions, height=400, use_container_width= True)
@@ -76,7 +85,9 @@ with tab2:
         accounts = query("daily_amount_over_time")
         st.dataframe(accounts, height=400, use_container_width= True)
 
+# ----- DASHBOARD TAB -----
 with tab3:
+    # Account Balance Over Time
     with st.container():
         if view == 'monthly':   
             monthly_amount_over_time = query("monthly_amount_over_time")
@@ -94,12 +105,14 @@ with tab3:
             st.plotly_chart(fig_accounts_over_time, use_container_width= True)
 
     st.markdown("""---""")
-
+    
     b1, b2 = st.columns(2)
+    # Payment Methods
     with b1:
         payment_methods = query("payment_methods")
         fig_payment_methods = px.bar(payment_methods, x='account', y='amount', title='Payment Methods')
         st.plotly_chart(fig_payment_methods, use_container_width= True)
+    # Receiving Methods
     with b2:
         receiving_methods = query("receiving_methods")
         fig_receiving_methods = px.bar(receiving_methods, x='account', y='amount', title='Receiving Methods')
@@ -108,25 +121,34 @@ with tab3:
     st.markdown("""---""")
 
     c1, c2 = st.columns(2)
+    # Expenses Per Category
     with c1:
         expenses_per_category = query("expenses_per_category")
-        fig_expenses_by_category = px.pie(expenses_per_category, values='expenses', title='Expenses per category', names='category', hole=0.4)
+        fig_expenses_by_category = px.pie(expenses_per_category, values='expenses', title='Expenses Per Category', names='category', hole=0.4)
         fig_expenses_by_category.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_expenses_by_category, use_container_width= True)
-        with st.expander("See top expenses"):
-            st.header("Top expenses")
-            st.dataframe(expenses_per_category, height=400, use_container_width= True)
+    # Income Per Category
     with c2:
         income_per_category = query("income_per_category")
-        fig_income = px.pie(income_per_category, values='income', names='category', title='Income per category', hole=0.4)
+        fig_income = px.pie(income_per_category, values='income', names='category', title='Income Per Category', hole=0.4)
         fig_income.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_income, use_container_width= True)
-        with st.expander("See top income sources"):
-            st.header("Top income sources")
-            st.dataframe(income_per_category, height=400, use_container_width= True)
 
     st.markdown("""---""")
 
+    d1, d2 = st.columns(2)
+    # Top Expenses
+    with d1:
+        st.markdown("###### Top Expenses")
+        st.dataframe(expenses_per_category, height=400, use_container_width= True)
+    # Top Income Sources
+    with d2:
+        st.markdown("###### Top Income Sources")
+        st.dataframe(income_per_category, height=400, use_container_width= True)
+
+    st.markdown("""---""")
+
+    # Expenses Over Time
     with st.container():
         if view == 'monthly':
             monthly_expenses = query("monthly_expenses")
@@ -140,11 +162,14 @@ with tab3:
             daily_expenses = query("daily_expenses")
             fig_daily_expenses = px.line(daily_expenses, x='day', y='expenses', title='Daily Expenses')
             st.plotly_chart(fig_daily_expenses, use_container_width= True)
+
+# ----- DOCUMENTATIONS TAB -----
 with tab4:
     st.subheader('Architecture Diagram')
     architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
     st.image(architecture_diagram)
 
+# Hide streamlit style
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
