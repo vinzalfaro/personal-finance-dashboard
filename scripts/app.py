@@ -2,13 +2,14 @@ from database import extract, transform, load
 from read_queries import query
 import streamlit as st
 import plotly.express as px
+from PIL import Image
 
 st.set_page_config(page_title='My Personal Finance App',
                    page_icon=':money_with_wings:',
-                   layout='wide')
+                   layout='centered')
 
 st.title('Personal Finance App')
-tab1, tab2, tab3 = st.tabs(['Home', 'Data', 'Dashboard'])
+tab1, tab2, tab3, tab4 = st.tabs(['Home', 'Data', 'Dashboard', 'Documentation'])
 
 with st.sidebar:
     st.header('Filters')
@@ -18,11 +19,35 @@ with st.sidebar:
 
 with tab1:
     with st.container():
+        st.subheader('Project Overview')
         st.markdown("""
-                    Hi! Welcome to Personal Finance App. You can find the app's GitHub repository [here](https://github.com/vinzalfaro/bluecoins_dashboard).
-                    Personal Finance App creates an informative dashboard from your Bluecoins transaction data. 
-                    Bluecoins is an expense tracking app which allows exporting of your data in csv format. 
-                    Please upload your transactions csv file below and go to the "Dashboard" tab to see your analytics dashboard. 
+                    The Personal Finance App extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
+                    Bluecoins is an expense tracking app that allows the export of data in CSV format. The Personal Finance App takes this file or 
+                    any other file with the same CSV format to generate analytics.
+                    """ )
+        st.subheader('Motivation Behind the Project')
+        st.markdown("""
+                    I’ve been using the Bluecoins app to track my expenses for over a year now and I want to gain insights about my expenditure. 
+                    Some of the questions I aim to answer are as follows:
+
+                    1. Where am I spending the most?
+                    2. What should be my daily, weekly, and monthly budget based on my spending patterns?
+                    3. Where do most of my money come from?
+                    4. What are my most preferred payment and receiving methods?
+                    5. How much money comes in and out of my accounts over time?
+
+                    In addition, I wanted to apply what I’ve learned in programming so far. This covers Python (Pandas, SQLAlchemy, Plotly, Streamlit), 
+                    SQL (relational databases, how to write queries), Git workflow, project management and documentation.
+                    """ )
+        st.subheader('Get Started')
+        st.markdown("""
+                    To use the app, follow these instructions:
+
+                    1. Export transactions data from Bluecoins app. This will create a file called ‘transactions_list.csv’.
+                    2. Go to the ‘Data’ tab and upload the file. The dashboard will be created automatically once it is uploaded. 
+                    You can explore the data by clicking on the expanders below.
+                    3. Go to the ‘Dashboard’ tab and explore the charts. Use the filters on the left sidebar to show specific plots or views.
+
                     """ )
 
 with tab2:
@@ -108,3 +133,7 @@ with tab3:
             daily_expenses = query("daily_expenses")
             fig_daily_expenses = px.line(daily_expenses, x='day', y='expenses', title='Daily Expenses')
             st.plotly_chart(fig_daily_expenses, use_container_width= True)
+with tab4:
+    st.header('Architecture Diagram')
+    architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
+    st.image(architecture_diagram)
