@@ -6,7 +6,7 @@ from PIL import Image
 
 st.set_page_config(page_title='My Personal Finance App',
                    page_icon=':money_with_wings:',
-                   layout='centered')
+                   layout='wide')
 
 st.title('Personal Finance App')
 tab1, tab2, tab3, tab4 = st.tabs(['Home', 'Data', 'Dashboard', 'Documentation'])
@@ -26,7 +26,7 @@ with tab1:
                     any other file with the same CSV format to generate analytics.
                     """ )
         personal_finance = Image.open('../images/finance.jpg')
-        st.image(personal_finance, caption='Source: LittlePigPower/Shutterstock.com')
+        st.image(personal_finance, caption='Source: LittlePigPower/Shutterstock.com', use_column_width=True)
     
     with st.container():
         st.subheader('Motivation Behind the Project')
@@ -44,7 +44,7 @@ with tab1:
                     SQL (relational databases, how to write queries), Git workflow, project management and documentation.
                     """ )
         architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
-        st.image(architecture_diagram, caption='Technologies used')
+        st.image(architecture_diagram, caption='Technologies used', use_column_width=True)
             
     with st.container():
         st.subheader('Get Started')
@@ -144,3 +144,12 @@ with tab4:
     st.subheader('Architecture Diagram')
     architecture_diagram = Image.open('../images/Architecture Diagram.jpg')
     st.image(architecture_diagram)
+
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
