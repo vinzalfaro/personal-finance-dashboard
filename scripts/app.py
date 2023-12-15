@@ -5,12 +5,12 @@ import plotly.express as px
 from PIL import Image
 
 # ----- PAGE SETUP -----
-st.set_page_config(page_title='My Personal Finance App',
+st.set_page_config(page_title='Personal Finance Dashboard',
                    page_icon=':money_with_wings:',
                    layout='wide')
 
 # ----- TITLE & TABS -----
-st.title('Personal Finance App')
+st.title('Personal Finance Dashboard')
 tab1, tab2, tab3, tab4 = st.tabs(['Home', 'Data', 'Dashboard', 'Documentation'])
 
 # ----- SIDE BAR ----- 
@@ -27,8 +27,8 @@ with tab1:
     with st.container():
         st.subheader('Project Overview')
         st.markdown("""
-                    The Personal Finance App extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
-                    Bluecoins is an expense tracking app that allows export of data in CSV format. The Personal Finance App takes this file or 
+                    The Personal Finance Dashboard extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
+                    Bluecoins is an expense tracking app that allows export of data in CSV format. The Personal Finance Dashboard takes this file or 
                     any other file with the same CSV format to generate analytics.
                     """ )
         personal_finance = Image.open('../images/finance.jpg')

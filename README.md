@@ -1,8 +1,8 @@
-# Personal Finance App
+# Personal Finance Dashboard
 
 ## Project Overview
-The Personal Finance App extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
-Bluecoins is an expense tracking app that allows export of data in CSV format. The Personal Finance App takes this file or 
+The Personal Finance Dashboard extracts expenditure data from Bluecoins and creates a dashboard to aid in budgeting and financial management. 
+Bluecoins is an expense tracking app that allows export of data in CSV format. The Personal Finance Dashboard takes this file or 
 any other file with the same CSV format to generate analytics.
 
 ## Project Snapshots
