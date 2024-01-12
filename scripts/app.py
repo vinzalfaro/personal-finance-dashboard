@@ -187,6 +187,13 @@ def main():
         except FileNotFoundError:
                 st.warning(f"Image not found")
 
+        st.subheader('How It Works')
+        try:
+            architecture_diagram = Image.open('images/workflow.png')
+            st.image(architecture_diagram)
+        except FileNotFoundError:
+                st.warning(f"Image not found")
+
 
 if __name__ == '__main__':
     main()
