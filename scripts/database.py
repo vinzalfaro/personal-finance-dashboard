@@ -21,4 +21,7 @@ def load(df, db_table, connection_uri):
         if_exists = "replace",
         index = False)
 
-
+def drop(table, connection_uri):
+    db_engine = create_engine(connection_uri)
+    with db_engine.connect() as connection:
+        connection.execute(f"DROP TABLE IF EXISTS {table};")
