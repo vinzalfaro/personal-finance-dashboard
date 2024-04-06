@@ -73,7 +73,7 @@ def main():
         # ----- DATA TAB -----
         with tab2:
             # File input
-            connection_uri = "postgresql+psycopg2://postgres:password@localhost:5432/personal_finance_dashboard"
+            connection_uri = "postgresql://postgres:password@postgres:5432/personal_finance_dashboard"
             file = st.file_uploader("Upload file here")
 
             if st.button("Generate Dashboard"):
@@ -82,6 +82,8 @@ def main():
                     load(raw_transactions, "raw_transactions", connection_uri)
                     cleaned_transactions = transform(raw_transactions)
                     load(cleaned_transactions, "transactions", connection_uri)
+                else:
+                    st.error("Please upload a file before generating the dashboard.")
             
             if st.button("Clear Data"):
                 drop("raw_transactions", connection_uri)
@@ -176,7 +178,7 @@ def main():
                     fig_daily_expenses = px.line(daily_expenses, x='day', y='expenses', title='Daily Expenses')
                     st.plotly_chart(fig_daily_expenses, use_container_width= True)
     except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            st.error(f"An error occurred: {str(e)}")
 
     # ----- DOCUMENTATIONS TAB -----
     with tab4:
