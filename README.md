@@ -24,4 +24,23 @@ In addition, I wanted to apply what I’ve learned in programming so far. This c
 SQL (relational databases, how to write queries), Git workflow, project management and documentation.
 
 ## Technology
-![Architecture Diagram](<images/Architecture Diagram.jpg>)
+![Tech Stack](<images/Architecture Diagram.jpg>)
+
+## Architecture
+![Architecture](images/workflow.png)
+
+
+## To Run
+1. Clone the repo
+```shell
+git clone https://github.com/vinzalfaro/personal-finance-dashboard.git
+```
+2. Build the Docker images using docker-compose:
+```bash
+docker-compose build
+```
+3. Run the Docker containers:
+```bash
+docker-compose up
+```
+4. Open your browser and go to `localhost:8501`.
