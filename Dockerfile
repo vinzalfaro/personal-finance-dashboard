@@ -8,8 +8,8 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 8501
 
+COPY ./images ./images
+
 COPY ./scripts ./scripts
 
-ENTRYPOINT ["streamlit", "run"]
-
-CMD ["./scripts/app.py"]
+ENTRYPOINT ["streamlit", "run", "scripts/app.py"]
