@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    depends_on:
+      - postgres
+    volumes:
+      - ./scripts:/app/scripts
+      - ./images:/app/images
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: personal_finance_dashboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
